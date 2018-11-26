@@ -1,0 +1,11 @@
+{
+  "name": "mws-restaruant-project2",
+  "private": true,
+  "dependencies": {
+    "modernizr": "~2.8.1"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^5.2.0"
+  }
+}
