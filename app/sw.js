@@ -1,16 +1,11 @@
 import idb from 'idb';
 
-let staticCache='restaurant-static-content';
-let photoCache='restaurant-photo-content';
-let allCaches = [
-  staticCache,
-  photoCache
-];
+let allCaches='restaurant-static-content';
 
-var dbPromise = idb.open('mws-sailsaway', 1, upgradeDb => {
-  switch(upgradeDb.oldVersion) {
+var dbPromise = idb.open('mws-sailsaway', 3, upgradeDb => {
+  switch (upgradeDB.oldVersion) {
     case 0:
-      upgradeDb.createObjectStore('restaurants', { keyPath: 'id' });
+      upgradeDB.createObjectStore("restaurants", {keyPath: "id"});
   }
 });
 
@@ -21,12 +16,13 @@ self.addEventListener('install', function(event) {
           '/',
           '/index.html',
           '/restaurant.html',
+          '/css/styles.css',
+          '/css/responsive.css',
           '/scripts/main.js',
           '/scripts/dbhelper.js',
           '/scripts/restaurant_info.js',
-          '/sw.js',
-          '/css/styles.css',
-          '/css/responsive.css'
+          '/sw.js'
+
         ]).catch(function(error) {
           console.log(error);
         });
