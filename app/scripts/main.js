@@ -155,9 +155,10 @@ const createRestaurantHTML = (restaurant) => {
   const li = document.createElement('li');
 
   const image = document.createElement('img');
+  const imgur = DBHelper.imageUrlForRestaurant(restaurant);
   image.className = 'restaurant-img';
-  image.alt = 'Image of ' + restaurant.name + 'restaurant.';
-  image.src = DBHelper.imageUrlForRestaurant(restaurant);
+  image.alt = 'Image of ' + restaurant.name + ' restaurant.';
+  image.src = imgur + '.webp';
   li.append(image);
 
 //Create restaurant information box
