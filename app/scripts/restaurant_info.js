@@ -52,16 +52,34 @@ const fetchRestaurantFromURL = (callback) => {
  * Create restaurant HTML and add it to the webpage
  */
 const fillRestaurantHTML = (restaurant = self.restaurant) => {
+  const div = document.getElementById('maincontent');
+  const isFavorite = (restaurant['is_favorite'] && restaurant['is_favorite'].toString() === 'true') ? true : false;
+  const favoriteDiv = document.createElement('div');
+  favoriteDiv.className = 'favorite-icon';
+  const favorite = document.createElement('button');
+  favorite.style.background = isFavorite
+    ? `url('/icons/heart-solid.svg') no-repeat`
+    : `url('icons/heart-regular.svg') no-repeat`;
+  favorite.innerHTML = isFavorite
+    ? restaurant.name + ' is a favorite'
+    : restaurant.name + ' is not a favorite';
+  favorite.id = 'favorite-icon-' + restaurant.id;
+  favorite.onclick = event => handleFavoriteClick(restaurant.id, !isFavorite);
+  favoriteDiv.append(favorite);
+  div.append(favoriteDiv);
+
   const name = document.getElementById('restaurant-name');
   name.innerHTML = restaurant.name;
 
   const address = document.getElementById('restaurant-address');
   address.innerHTML = restaurant.address;
 
-  const image = document.getElementById('restaurant-img');
-  image.className = 'restaurant-img'
-  image.alt = 'Image of ' + restaurant.name + 'restaurant.';
-  image.src = DBHelper.imageUrlForRestaurant(restaurant);
+  const image = document.createElement('img');
+  const imgur = DBHelper.imageUrlForRestaurant(restaurant);
+  image.className = 'restaurant-img';
+  image.alt = 'Image of ' + restaurant.name + ' restaurant.';
+  image.src = imgur + '.webp';
+  li.append(image);
 
   const cuisine = document.getElementById('restaurant-cuisine');
   cuisine.innerHTML = restaurant.cuisine_type;

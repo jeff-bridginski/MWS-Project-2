@@ -32,6 +32,7 @@ self.addEventListener('install', function(event) {
           '/scripts/main.js',
           '/scripts/dbhelper.js',
           '/scripts/restaurant_info.js',
+          '/scripts/review.js',
           '/sw.js'
 
         ]).catch(function(error) {
@@ -61,7 +62,7 @@ self.addEventListener('install', function(event) {
     let cacheRequest = event.request;
 
     let cacheUrlObj = new URL(event.request.url);
-    console.log(`URL is ${cacheUrlObj}`);
+    //console.log(`URL is ${cacheUrlObj}`);
     if (event.request.url.indexOf('restaurant.html') > -1) {
       const cacheURL = 'restaurant.html';
       cacheRequest = new Request(cacheURL);

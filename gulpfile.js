@@ -9,6 +9,7 @@ const browserify = require('browserify');
 const babelify = require('babelify');
 const source = require('vinyl-source-stream');
 
+
 const $ = gulpLoadPlugins();
 const reload = browserSync.reload;
 
@@ -132,7 +133,8 @@ gulp.task('serve', () => {
         baseDir: ['.tmp', 'app'],
         routes: {
           '/bower_components': 'bower_components'
-        }
+        },
+        httpModule: 'http2'
       }
     });
 
