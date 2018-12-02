@@ -88,7 +88,7 @@ class DBHelper {
   }
   static fetchRestaurantReviewsById(id, callback) {
     // Fetch all reviews for the specific restaurant
-    const fetchURL = DBHelper.DATABASE_REVIEWS_URL + '/?restaurant_id=' + id;
+    const fetchURL = DBHelper.DATABASE_REVIEWS_URL + '/?restaurant_id=1';
     console.log(fetchURL);
     fetch(fetchURL, {method: 'GET'}).then(response => {
       if (!response.clone().ok && !response.clone().redirected) {

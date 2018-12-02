@@ -92,7 +92,9 @@ const fillRestaurantHTML = (restaurant = self.restaurant) => {
   }
   // fill reviews
   //DBHelper.fetchRestaurantReviewsById(restaurant.id, fillReviewsHTML)
+  console.log('Restaurant Id is ' + restaurant.id);
   DBHelper.fetchRestaurantReviewsById(restaurant.id, fillReviewsHTML)
+
 };
 
 /**
