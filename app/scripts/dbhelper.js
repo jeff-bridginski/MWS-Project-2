@@ -85,11 +85,11 @@ class DBHelper {
           callback('Restaurant does not exist', null);
         }
       }
-    });
+    },id);
   }
   static fetchRestaurantReviewsById(id, callback) {
     // Fetch all reviews for the specific restaurant
-    const fetchURL = DBHelper.DATABASE_REVIEWS_URL + '/?restaurant_id=1';
+    const fetchURL = DBHelper.DATABASE_REVIEWS_URL + '/?restaurant_id=' + id;
     console.log(fetchURL);
     fetch(fetchURL, {method: 'GET'}).then(response => {
       if (!response.clone().ok && !response.clone().redirected) {
