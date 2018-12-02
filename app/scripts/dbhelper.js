@@ -44,6 +44,7 @@ class DBHelper {
    */
   static fetchRestaurants(callback,id) {
     let fetchURL;
+    console.log('ID is ' + id);
     if (!id) {
       fetchURL = DBHelper.DATABASE_URL;
     } else {
