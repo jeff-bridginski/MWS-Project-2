@@ -5,15 +5,15 @@ let allCaches='restaurant-static-content';
 const dbPromise = idb.open('mws-sailsaway', 4, upgradeDB => {
   switch (upgradeDB.oldVersion) {
     case 0:
-      upgradeDB.createObjectStore("restaurants", {keyPath: "id"});
+      upgradeDB.createObjectStore('restaurants', {keyPath: 'id'});
     case 1:
       {
-        const reviewsStore = upgradeDB.createObjectStore("reviews", {keyPath: "id"});
-        reviewsStore.createIndex("restaurant_id", "restaurant_id");
+        const reviewsStore = upgradeDB.createObjectStore('reviews', {keyPath: 'id'});
+        reviewsStore.createIndex('restaurant_id', 'restaurant_id');
       }
     case 2:
-      upgradeDB.createObjectStore("pending", {
-        keyPath: "id",
+      upgradeDB.createObjectStore('pending', {
+        keyPath: 'id',
         autoIncrement: true
       });
   }
@@ -32,6 +32,7 @@ self.addEventListener('install', function(event) {
           '/scripts/main.js',
           '/scripts/dbhelper.js',
           '/scripts/restaurant_info.js',
+          '/scripts/review.js',
           '/sw.js'
 
         ]).catch(function(error) {
@@ -61,7 +62,7 @@ self.addEventListener('install', function(event) {
     let cacheRequest = event.request;
 
     let cacheUrlObj = new URL(event.request.url);
-    console.log(`URL is ${cacheUrlObj}`);
+    //console.log(`URL is ${cacheUrlObj}`);
     if (event.request.url.indexOf('restaurant.html') > -1) {
       const cacheURL = 'restaurant.html';
       cacheRequest = new Request(cacheURL);
@@ -100,7 +101,7 @@ self.addEventListener('install', function(event) {
           return json
         });
     }
-    if (event.request.url.indexOf("reviews") > -1) {
+    if (event.request.url.indexOf('reviews') > -1) {
       handleReviewsEvent(event, id); //For handling reveiws
     } else {
       handleRestaurantEvent(event, id); //For handling resturant requests.
@@ -110,19 +111,19 @@ self.addEventListener('install', function(event) {
   const handleReviewsEvent = (event, id) => {
     event.respondWith(dbPromise.then(db => {
       return db
-        .transaction("reviews")
-        .objectStore("reviews")
-        .index("restaurant_id")
+        .transaction('reviews')
+        .objectStore('reviews')
+        .index('restaurant_id')
         .getAll(id);
     }).then(data => {
       return (data.length && data) || fetch(event.request)
         .then(fetchResponse => fetchResponse.json())
         .then(data => {
           return dbPromise.then(idb => {
-            const itx = idb.transaction("reviews", "readwrite");
-            const store = itx.objectStore("reviews");
+            const itx = idb.transaction('reviews', 'readwrite');
+            const store = itx.objectStore('reviews');
             data.forEach(review => {
-              store.put({id: review.id, "restaurant_id": review["restaurant_id"], data: review});
+              store.put({id: review.id, 'restaurant_id': review['restaurant_id'], data: review});
             })
             return data;
           })
@@ -135,7 +136,7 @@ self.addEventListener('install', function(event) {
       }
       return new Response(JSON.stringify(finalResponse));
     }).catch(error => {
-      return new Response("Error fetching data", {status: 500})
+      return new Response('Error fetching data', {status: 500})
     }))
   }
 
@@ -143,16 +144,16 @@ self.addEventListener('install', function(event) {
 
     event.respondWith(dbPromise.then(db => {
       return db
-        .transaction("restaurants")
-        .objectStore("restaurants")
+        .transaction('restaurants')
+        .objectStore('restaurants')
         .get(id);
     }).then(data => {
       return (data && data.data) || fetch(event.request)
         .then(fetchResponse => fetchResponse.json())
         .then(json => {
           return dbPromise.then(db => {
-            const tx = db.transaction("restaurants", "readwrite");
-            const store = tx.objectStore("restaurants");
+            const tx = db.transaction('restaurants', 'readwrite');
+            const store = tx.objectStore('restaurants');
             store.put({id: id, data: json});
             return json;
           });
@@ -160,7 +161,7 @@ self.addEventListener('install', function(event) {
     }).then(finalResponse => {
       return new Response(JSON.stringify(finalResponse));
     }).catch(error => {
-      return new Response("Error fetching data", {status: 500});
+      return new Response('Error fetching data', {status: 500});
     }));
   };
 
@@ -173,18 +174,18 @@ self.addEventListener('install', function(event) {
         return caches
           .open(allCaches)
           .then(cache => {
-            if (fetchResponse.url.indexOf("browser-sync") === -1) {
+            if (fetchResponse.url.indexOf('browser-sync') === -1) {
               cache.put(event.request, fetchResponse.clone());
             }
             return fetchResponse;
           });
       }).catch(error => {
-        if (event.request.url.indexOf(".jpg") > -1) {
-          return caches.match("/img/na.png");
+        if (event.request.url.indexOf('.jpg') > -1) {
+          return caches.match('/img/na.png');
         }
-        return new Response("Application is not connected to the internet", {
+        return new Response('Application is not connected to the internet', {
           status: 404,
-          statusText: "Application is not connected to the internet"
+          statusText: 'Application is not connected to the internet'
         });
       }));
     }));

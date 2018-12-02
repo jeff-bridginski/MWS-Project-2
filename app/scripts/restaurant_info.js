@@ -18,7 +18,8 @@ window.initMap = () => {
       DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
     }
     const name = document.getElementById('map-container');
-  name.setAttribute('aria-label',restaurant.name);
+    name.setAttribute('aria-label',restaurant.name);
+    DBHelper.nextPending();
   });
 
 }
@@ -52,6 +53,24 @@ const fetchRestaurantFromURL = (callback) => {
  * Create restaurant HTML and add it to the webpage
  */
 const fillRestaurantHTML = (restaurant = self.restaurant) => {
+  const div = document.getElementById('maincontent');
+  const isFavorite = (restaurant['is_favorite'] && restaurant['is_favorite'].toString() === 'true')
+    ? true
+    : false;
+  const favoriteDiv = document.createElement('div');
+  favoriteDiv.className = 'favorite-icon';
+  const favorite = document.createElement('button');
+  favorite.style.background = isFavorite
+    ? `url('/icons/heart-solid.svg') no-repeat`
+    : `url('/icons/heart-regular.svg') no-repeat`;
+  favorite.innerHTML = isFavorite
+    ? restaurant.name + ' is a favorite'
+    : restaurant.name + ' is not a favorite';
+  favorite.id = 'favorite-icon-' + restaurant.id;
+  favorite.onclick = event => handleFavoriteClick(restaurant.id, !isFavorite);
+  favoriteDiv.append(favorite);
+  div.append(favoriteDiv);
+
   const name = document.getElementById('restaurant-name');
   name.innerHTML = restaurant.name;
 
@@ -72,8 +91,9 @@ const fillRestaurantHTML = (restaurant = self.restaurant) => {
     fillRestaurantHoursHTML();
   }
   // fill reviews
-  fillReviewsHTML();
-}
+  //DBHelper.fetchRestaurantReviewsById(restaurant.id, fillReviewsHTML)
+  DBHelper.fetchRestaurantReviewsById(restaurant.id, fillReviewsHTML)
+};
 
 /**
  * Create restaurant operating hours HTML table and add it to the webpage.
@@ -98,11 +118,21 @@ const fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hour
 /**
  * Create all reviews HTML and add them to the webpage.
  */
-const fillReviewsHTML = (reviews = self.restaurant.reviews) => {
+const fillReviewsHTML = (error, reviews = self.restaurant.reviews) => {
+
+  if (error) {
+    console.log('Error retrieving restaurant review:', error);
+  }
+
   const container = document.getElementById('reviews-container');
   const title = document.createElement('h2');
   title.innerHTML = 'Reviews';
   container.appendChild(title);
+
+  const addReviewLink = document.createElement('a');
+  addReviewLink.href = `/review.html?id=${self.restaurant.id}`;
+  addReviewLink.innerHTML = 'Add Review';
+  container.appendChild(addReviewLink);
 
   if (!reviews) {
     const noReviews = document.createElement('p');
@@ -166,4 +196,11 @@ const getParameterByName = (name, url) => {
   if (!results[2])
     return '';
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
+}
+
+const handleFavoriteClick = (id, newState) => {
+  const favorite = document.getElementById('favorite-icon-' + id);
+  self.restaurant['is_favorite'] = newState;
+  favorite.onclick = event => handleFavoriteClick(restaurant.id, !self.restaurant['is_favorite']);
+  DBHelper.handleFavoriteClick(id, newState);
 }
