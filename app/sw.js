@@ -76,6 +76,7 @@ self.addEventListener('install', function(event) {
       let id = checkURL
         .searchParams
         .get('restaurant_id') - 0;
+        console.log(id);
       if (!id) {
         if (checkURL.pathname.indexOf('restaurants')) {
           id = parts[parts.length - 1] === 'restaurants'
