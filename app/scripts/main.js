@@ -180,8 +180,8 @@ const createRestaurantHTML = (restaurant) => {
     ? `url('/icons/heart-solid.svg') no-repeat`
     : `url('icons/heart-regular.svg') no-repeat`;
   favorite.innerHTML = isFavorite
-    ? restaurant.name + ' is a favorite'
-    : restaurant.name + ' is not a favorite';
+  ? '  ' + restaurant.name + ' is a favorite'
+  : '  ' + restaurant.name + ' is not a favorite';
   favorite.id = 'favorite-icon-' + restaurant.id;
   favorite.onclick = event => handleFavoriteClick(restaurant.id, !isFavorite);
   favoriteDiv.append(favorite);
