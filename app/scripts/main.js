@@ -170,6 +170,7 @@ const createRestaurantHTML = (restaurant) => {
   name.innerHTML = restaurant.name;
   div.append(name);
 
+  console.log("is_favorite: ", restaurant["is_favorite"]);
   const isFavorite = (restaurant['is_favorite'] && restaurant['is_favorite'].toString() === 'true')
   ? true
   : false;
@@ -209,8 +210,14 @@ const createRestaurantHTML = (restaurant) => {
 }
 
 const handleFavoriteClick = (id, newState) => {
-  self.restaurant['is_favorite'] = newState;
-  favorite.onclick = event => handleFavoriteClick(restaurant.id, !self.restaurant['is_favorite']);
+  const favorite = document.getElementById("favorite-icon-" + id);
+  const restaurant = self
+    .restaurants
+    .filter(r => r.id === id)[0];
+  if (!restaurant)
+    return;
+  restaurant["is_favorite"] = newState;
+  favorite.onclick = event => handleFavoriteClick(restaurant.id, !restaurant["is_favorite"]);
   DBHelper.handleFavoriteClick(id, newState);
 }
 

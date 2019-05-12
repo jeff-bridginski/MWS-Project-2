@@ -1,6 +1,7 @@
 import idb from 'idb';
 
 let allCaches='restaurant-static-content';
+let dbReady = false;
 
 const dbPromise = idb.open('mws-sailsaway', 4, upgradeDB => {
   switch (upgradeDB.oldVersion) {
