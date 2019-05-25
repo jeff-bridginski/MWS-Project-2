@@ -9,9 +9,7 @@ var markers = []
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
  */
 document.addEventListener('DOMContentLoaded', (event) => {
-  registerServiceWorker();
-  fetchNeighborhoods();
-  fetchCuisines();
+
 });
 
 /**
@@ -27,21 +25,6 @@ const fetchNeighborhoods = () => {
     }
   });
 }
-const registerServiceWorker = () => {
-  if (!navigator.serviceWorker) return;
-
-  navigator.serviceWorker.register('/sw.js').then(function(reg) {
-    if(reg.installing) {
-      console.log('Service worker installing');
-    } else if(reg.waiting) {
-      console.log('Service worker installed');
-    } else if(reg.active) {
-      console.log('Service worker active');
-    }
-  }).catch(function() {
-    console.log('Registration failed!');
-  });
-};
 /**
  * Set neighborhoods HTML.
  */
@@ -97,6 +80,7 @@ const fillCuisinesHTML = (cuisines = self.cuisines) => {
     scrollwheel: false
   });
   updateRestaurants();
+  DBHelper.nextPending();
 }
 
 /**
@@ -163,14 +147,14 @@ const createRestaurantHTML = (restaurant) => {
 
 //Create restaurant information box
   const div = document.createElement('div');
-  div.className = 'restaurant-information`';
+  div.className = 'restaurant-information';
   li.append(div);
 
   const name = document.createElement('h2');
   name.innerHTML = restaurant.name;
   div.append(name);
 
-  console.log("is_favorite: ", restaurant["is_favorite"]);
+  console.log(`${restaurant.name} is favorite: ${restaurant['is_favorite']}`);
   const isFavorite = (restaurant['is_favorite'] && restaurant['is_favorite'].toString() === 'true')
   ? true
   : false;
@@ -210,14 +194,14 @@ const createRestaurantHTML = (restaurant) => {
 }
 
 const handleFavoriteClick = (id, newState) => {
-  const favorite = document.getElementById("favorite-icon-" + id);
+  const favorite = document.getElementById('favorite-icon-' + id);
   const restaurant = self
     .restaurants
     .filter(r => r.id === id)[0];
   if (!restaurant)
     return;
-  restaurant["is_favorite"] = newState;
-  favorite.onclick = event => handleFavoriteClick(restaurant.id, !restaurant["is_favorite"]);
+  restaurant['is_favorite'] = newState;
+  favorite.onclick = event => handleFavoriteClick(restaurant.id, !restaurant['is_favorite']);
   DBHelper.handleFavoriteClick(id, newState);
 }
 

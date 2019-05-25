@@ -44,7 +44,6 @@ class DBHelper {
    */
   static fetchRestaurants(callback,id) {
     let fetchURL;
-    console.log('ID is ' + id);
     if (!id) {
       fetchURL = DBHelper.DATABASE_URL;
     } else {
@@ -195,14 +194,14 @@ class DBHelper {
    * Restaurant page URL.
    */
   static urlForRestaurant(restaurant) {
-    return (`./restaurant.html?id=${restaurant.id}`);
+    return `./restaurant.html?id=${restaurant.id}`;
   }
 
   /**
    * Restaurant image URL.
    */
   static imageUrlForRestaurant(restaurant) {
-    return (`/img/webp/${restaurant.photograph}`);
+    return `/img/webp/${restaurant.photograph}`;
   }
 
   /**
@@ -314,6 +313,7 @@ class DBHelper {
   static updateCachedRestaurantData(id, updateObj) {
     const dbPromise = idb.open('mws-sailsaway');
     // Update in the data for all restaurants first
+    console.log(id);
     dbPromise.then(db => {
       //console.log('Getting db transaction');
       const tx = db.transaction('restaurants', 'readwrite');
@@ -335,7 +335,7 @@ class DBHelper {
           keys.forEach(k => {
             restaurantObj[k] = updateObj[k];
           })
-
+console.log(value);
           // Put the data back in IDB storage
           dbPromise.then(db => {
             const tx = db.transaction('restaurants', 'readwrite');
@@ -436,7 +436,7 @@ class DBHelper {
       const favorite = document.getElementById('favorite-icon-' + resultObj.id);
       favorite.style.background = resultObj.value
         ? `url('/icons/heart-regular.svg') no-repeat`
-        : `url('/icons/heart-solid.svg') no-repeat`;
+        : `url('icons/heart-solid.svg') no-repeat`;
     });
   }
 
